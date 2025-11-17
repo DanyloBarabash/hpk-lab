@@ -6,6 +6,13 @@ from src.core import router as common_routes
 from src.storage import router as storage_router
 from src.external_api import router as external_router
 from src.cat_facts import router as cat_fact_router
+from alembic.config import Config
+from alembic import command
+
+
+def run_migrations():
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
 
 
 @asynccontextmanager
@@ -13,6 +20,9 @@ async def lifespan(app: FastAPI):
     # Initialize DB tables on startup
     await _init_db_models()
     yield
+
+
+run_migrations()
 
 
 app = FastAPI(
