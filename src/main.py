@@ -18,8 +18,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Lab FastAPI Project",
     description="Lab project with FastAPI and Swagger UI",
-    version="0.1.0",
-    lifespan=lifespan
+    version="0.1.0"
 )
 
 app.include_router(common_routes.router)
