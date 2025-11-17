@@ -6,6 +6,7 @@ from src.core import router as common_routes
 from src.storage import router as storage_router
 from src.external_api import router as external_router
 from src.cat_facts import router as cat_fact_router
+from src.cache import router as cache_router
 from alembic.config import Config
 from alembic import command
 
@@ -37,6 +38,7 @@ app.include_router(common_routes.router)
 app.include_router(storage_router.router)
 app.include_router(external_router.router)
 app.include_router(cat_fact_router.router)
+app.include_router(cache_router.router)
 
 
 @app.get("/")

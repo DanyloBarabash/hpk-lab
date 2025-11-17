@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     """Application configuration loaded from environment variables."""
 
     redis_url: str | None = None
+    redis_TTL: int = 60  # cache time
     environment: str = "development"
 
     model_config = ConfigDict(
