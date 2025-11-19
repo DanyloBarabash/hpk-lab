@@ -24,8 +24,8 @@ class UpdatedMix:
         self.updated_at = get_datetime()
 
 
-class BaseOutSchema(BaseModel):
-    """Base Pydantic schema for all models using UpdatedMix."""
+class BaseOutModel(BaseModel):
+    """Base Pydantic model for all models using UpdatedMix."""
 
     id: int
     created_at: datetime.datetime

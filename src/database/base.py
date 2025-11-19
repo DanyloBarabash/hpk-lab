@@ -7,7 +7,6 @@ from src.settings import settings
 
 
 DATABASE_URL: str = settings.postgres
-print(DATABASE_URL)
 
 # Async engine for PostgreSQL
 engine = create_async_engine(
