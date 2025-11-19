@@ -10,7 +10,7 @@ from src.cat_facts import router as cat_fact_router
 from src.cache import router as cache_router
 from alembic.config import Config
 from alembic import command
-from src.core.logging.sentry import init_sentry
+# from src.core.logging.sentry import init_sentry
 
 
 def run_migrations():
@@ -20,7 +20,7 @@ def run_migrations():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_sentry()
+    # init_sentry()
     # setup_logging()
     # # Initialize DB tables on startup
     # await _init_db_models()
@@ -34,7 +34,7 @@ app = FastAPI(
     title="Lab FastAPI Project",
     description="Lab project with FastAPI and Swagger UI",
     version="0.1.0",
-    lifespan=lifespan
+    # lifespan=lifespan
 )
 
 app.include_router(common_routes.router)
