@@ -15,6 +15,9 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
     )
 
+    # logging
+    sentry_dsn: str | None = None
+
     # database settings (postgres)
     pg_host: str = "localhost"
     pg_port: int = 5432
