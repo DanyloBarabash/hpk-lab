@@ -1,4 +1,5 @@
 from azure.core.exceptions import ResourceNotFoundError
+
 from .config import azure_config
 
 

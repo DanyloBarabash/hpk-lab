@@ -3,8 +3,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import NullPool
-from src.settings import settings
 
+from src.settings import settings
 
 DATABASE_URL: str = settings.postgres
 
@@ -26,6 +26,7 @@ db_session_factory = async_sessionmaker(
 
 class Base(DeclarativeBase):
     """Base ORM class for all SQLAlchemy models."""
+
     pass
 
 

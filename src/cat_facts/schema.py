@@ -1,7 +1,8 @@
-from typing import Optional
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, Text, ForeignKey, DateTime
 from datetime import datetime
+from typing import Optional
+
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database.base import Base
 from src.database.base_schema import UpdatedMix
@@ -12,27 +13,13 @@ class CatFact(Base, UpdatedMix):
 
     __tablename__ = "cat_facts"
 
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        autoincrement=True
-    )
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
-    text: Mapped[str] = mapped_column(
-        Text,
-        nullable=False
-    )
+    text: Mapped[str] = mapped_column(Text, nullable=False)
 
-    image_url: Mapped[Optional[str]] = mapped_column(
-        String(300),
-        nullable=True
-    )
+    image_url: Mapped[Optional[str]] = mapped_column(String(300), nullable=True)
 
-    stats: Mapped["CatFactStats"] = relationship(
-        back_populates="fact",
-        uselist=False,
-        cascade="all, delete"
-    )
+    stats: Mapped["CatFactStats"] = relationship(back_populates="fact", uselist=False, cascade="all, delete")
 
 
 class CatFactStats(Base, UpdatedMix):
@@ -40,30 +27,12 @@ class CatFactStats(Base, UpdatedMix):
 
     __tablename__ = "cat_fact_stats"
 
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        autoincrement=True
-    )
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
-    fact_id: Mapped[int] = mapped_column(
-        Integer,
-        ForeignKey("cat_facts.id"),
-        unique=True,
-        nullable=False
-    )
+    fact_id: Mapped[int] = mapped_column(Integer, ForeignKey("cat_facts.id"), unique=True, nullable=False)
 
-    request_count: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-        default=0
-    )
+    request_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
-    last_requested_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=False),
-        nullable=True
-    )
+    last_requested_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=False), nullable=True)
 
-    fact: Mapped["CatFact"] = relationship(
-        back_populates="stats"
-    )
+    fact: Mapped["CatFact"] = relationship(back_populates="stats")

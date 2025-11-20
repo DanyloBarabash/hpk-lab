@@ -1,12 +1,11 @@
-from typing import Type, TypeVar, Generic, Optional, List
+import logging
+from typing import Generic, List, Optional, Type, TypeVar
+
+import sentry_sdk
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, delete
 
 from src.database.base import Base
-
-import logging
-import sentry_sdk
-
 
 ModelType = TypeVar("ModelType", bound=Base)
 
@@ -82,12 +81,7 @@ class BaseRepository(Generic[ModelType]):
         logger.info(f"[DB][{self.model.__name__}][UPDATE] id={obj_id}, data={data}")
 
         try:
-            stmt = (
-                update(self.model)
-                .where(self.model.id == obj_id)
-                .values(**data)
-                .returning(self.model)
-            )
+            stmt = update(self.model).where(self.model.id == obj_id).values(**data).returning(self.model)
             result = await self.session.execute(stmt)
             updated = result.scalar_one_or_none()
             await self.session.commit()

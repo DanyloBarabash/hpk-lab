@@ -1,10 +1,10 @@
 from typing import Optional
 
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, update
 
-from src.database.base_repository import BaseRepository
 from src.cat_facts.schema import CatFact, CatFactStats
+from src.database.base_repository import BaseRepository
 from src.database.utils import get_datetime
 
 
@@ -16,11 +16,7 @@ class CatFactRepository(BaseRepository[CatFact]):
 
     async def get_random(self) -> Optional[CatFact]:
         """Return a random local cat fact."""
-        stmt = (
-            select(CatFact)
-            .order_by(func.random())
-            .limit(1)
-        )
+        stmt = select(CatFact).order_by(func.random()).limit(1)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 

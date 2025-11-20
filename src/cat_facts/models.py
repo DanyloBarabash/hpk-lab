@@ -1,9 +1,10 @@
-from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel, Field, HttpUrl, ConfigDict
+from typing import Optional
 
-from src.database.base_schema import BaseOutModel
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+
 from src.cat_facts.config import cat_fact_config as cfg
+from src.database.base_schema import BaseOutModel
 
 
 class CatFactCreate(BaseModel):

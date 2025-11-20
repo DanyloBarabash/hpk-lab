@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException
-from src.cache.models import CacheItem
-from src.cache.service import cache_set, cache_get
 import logging
+
 import sentry_sdk
+from fastapi import APIRouter, HTTPException
+
+from src.cache.models import CacheItem
+from src.cache.service import cache_get, cache_set
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +25,8 @@ async def set_cache(item: CacheItem):
     except Exception as e:
         logger.error(f"[CACHE][SET] error: {e}")
         sentry_sdk.capture_exception(e)
-        raise HTTPException(status_code=500, detail=f"Cache set error")
+        raise HTTPException(status_code=500, detail="Cache set error")
+
 
 @router.get("/get/{key}")
 async def get_cache(key: str):
@@ -39,4 +42,4 @@ async def get_cache(key: str):
     except Exception as e:
         logger.error(f"[CACHE][GET] error: {e}")
         sentry_sdk.capture_exception(e)
-        raise HTTPException(status_code=500, detail=f"Cache get error")
+        raise HTTPException(status_code=500, detail="Cache get error")

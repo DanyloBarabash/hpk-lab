@@ -1,9 +1,11 @@
+import logging
+
+import sentry_sdk
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
+
+from src.external_api.models import CatCombinedModel, CatFactModel, CatImageModel
 from src.external_api.service import service
-from src.external_api.models import CatFactModel, CatImageModel, CatCombinedModel
-import logging
-import sentry_sdk
 
 logger = logging.getLogger(__name__)
 

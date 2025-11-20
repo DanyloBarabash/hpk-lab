@@ -4,14 +4,14 @@ from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.cat_facts.repository import (
-    CatFactRepository,
-    CatFactStatsRepository,
-)
 from src.cat_facts.models import (
     CatFactCreate,
     CatFactOut,
     CatFactStatsOut,
+)
+from src.cat_facts.repository import (
+    CatFactRepository,
+    CatFactStatsRepository,
 )
 
 
@@ -61,10 +61,7 @@ class CatFactService:
         # Local
         fact = await self.get_local_random_fact()
         if not fact:
-            return {
-                "message": "No local facts available",
-                "source": "local"
-            }
+            return {"message": "No local facts available", "source": "local"}
 
         return {
             "id": fact.id,
@@ -72,7 +69,7 @@ class CatFactService:
             "image_url": fact.image_url,
             "created_at": fact.created_at,
             "updated_at": fact.updated_at,
-            "source": "local"
+            "source": "local",
         }
 
     async def get_fact_stats(self, fact_id: int) -> Optional[CatFactStatsOut]:

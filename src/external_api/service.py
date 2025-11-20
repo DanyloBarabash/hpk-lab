@@ -1,10 +1,11 @@
 import asyncio
-import requests
 import logging
+
+import requests
 import sentry_sdk
 
 from src.cache.service import cache_get, cache_set
-from src.external_api.models import CatFactModel, CatImageModel, CatCombinedModel
+from src.external_api.models import CatCombinedModel, CatFactModel, CatImageModel
 from src.settings import settings
 
 logger = logging.getLogger(__name__)

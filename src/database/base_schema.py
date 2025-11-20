@@ -1,8 +1,8 @@
 import datetime
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import DateTime
 
 from pydantic import BaseModel, ConfigDict
+from sqlalchemy import DateTime
+from sqlalchemy.orm import Mapped, mapped_column
 
 from src.database.utils import get_datetime
 
