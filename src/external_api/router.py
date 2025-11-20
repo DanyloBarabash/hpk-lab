@@ -2,51 +2,67 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
 from src.external_api.service import service
 from src.external_api.models import CatFactModel, CatImageModel, CatCombinedModel
+import logging
+import sentry_sdk
 
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/external", tags=["External API"])
 
 
 @router.get("/fact", response_model=CatFactModel)
 def get_cat_fact() -> CatFactModel:
-    """
-    Return a random cat fact.
-    """
+    logger.info("[EXTERNAL][FACT] Request cat fact")
+
     try:
-        return service.get_cat_fact()
+        result = service.get_cat_fact()
+        logger.info("[EXTERNAL][FACT] Success")
+        return result
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.exception("[EXTERNAL][FACT] Error while fetching cat fact")
+        sentry_sdk.capture_exception(e)
+        raise HTTPException(status_code=500, detail="Failed to retrieve cat fact")
 
 
 @router.get("/image", response_model=CatImageModel)
 def get_cat_image() -> CatImageModel:
-    """
-    Return a random cat image.
-    """
+    logger.info("[EXTERNAL][IMAGE] Request cat image")
+
     try:
-        return service.get_cat_image()
+        result = service.get_cat_image()
+        logger.info("[EXTERNAL][IMAGE] Success")
+        return result
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.exception("[EXTERNAL][IMAGE] Error fetching cat image")
+        sentry_sdk.capture_exception(e)
+        raise HTTPException(status_code=500, detail="Failed to retrieve cat image")
 
 
 @router.get("/cat", response_model=CatCombinedModel)
 def get_cat_info() -> CatCombinedModel:
-    """
-    Return a combined cat fact and image.
-    """
+    logger.info("[EXTERNAL][CAT] Request combined cat fact + image")
+
     try:
-        return service.get_cat_info()
+        result = service.get_cat_info()
+        logger.info("[EXTERNAL][CAT] Success")
+        return result
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.exception("[EXTERNAL][CAT] Error fetching combined cat info")
+        sentry_sdk.capture_exception(e)
+        raise HTTPException(status_code=500, detail="Failed to retrieve cat info")
 
 
 @router.get("/cat/html", response_class=HTMLResponse)
 def get_cat_html() -> str:
-    """
-    Return an HTML page displaying a random cat image and fact.
-    """
+    logger.info("[EXTERNAL][CAT HTML] Request cat HTML page")
+
     try:
         result = service.get_cat_info()
+
+        logger.info("[EXTERNAL][CAT HTML] Success")
 
         html_content = f"""
         <!DOCTYPE html>
@@ -67,4 +83,6 @@ def get_cat_html() -> str:
         return html_content
 
     except Exception as e:
-        return f"<h3>Error loading cat info: {e}</h3>"
+        logger.exception("[EXTERNAL][CAT HTML] Error building cat HTML response")
+        sentry_sdk.capture_exception(e)
+        raise HTTPException(status_code=500, detail="Failed to load cat HTML")
