@@ -2,7 +2,7 @@ from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel, Field, HttpUrl, ConfigDict
 
-from src.database.base_schema import BaseOutSchema
+from src.database.base_schema import BaseOutModel
 from src.cat_facts.config import cat_fact_config as cfg
 
 
@@ -42,7 +42,7 @@ class CatFactUpdate(BaseModel):
     )
 
 
-class CatFactOut(BaseOutSchema):
+class CatFactOut(BaseOutModel):
     """DTO returned for cat facts."""
 
     text: str
@@ -51,7 +51,7 @@ class CatFactOut(BaseOutSchema):
     model_config = ConfigDict(from_attributes=True)
 
 
-class CatFactStatsOut(BaseOutSchema):
+class CatFactStatsOut(BaseOutModel):
     """DTO for returning statistics for a local cat fact."""
 
     fact_id: int
