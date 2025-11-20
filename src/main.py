@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-# from src.core.logging.logging_config import setup_logging
+from src.core.logging.logging_config import setup_logging
 from src.database.base import _init_db_models # noqa
 from fastapi import FastAPI
 from src.core import router as common_routes
@@ -10,7 +10,7 @@ from src.cat_facts import router as cat_fact_router
 from src.cache import router as cache_router
 from alembic.config import Config
 from alembic import command
-# from src.core.logging.sentry import init_sentry
+from src.core.logging.sentry import init_sentry
 
 
 def run_migrations():
@@ -20,8 +20,8 @@ def run_migrations():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # init_sentry()
-    # setup_logging()
+    init_sentry()
+    setup_logging()
     # # Initialize DB tables on startup
     # await _init_db_models()
     yield
