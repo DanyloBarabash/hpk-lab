@@ -4,15 +4,8 @@ from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.cat_facts.models import (
-    CatFactCreate,
-    CatFactOut,
-    CatFactStatsOut,
-)
-from src.cat_facts.repository import (
-    CatFactRepository,
-    CatFactStatsRepository,
-)
+from src.cat_facts.models import CatFactCreate, CatFactOut, CatFactStatsOut
+from src.cat_facts.repository import CatFactRepository, CatFactStatsRepository
 
 
 class CatFactService:
