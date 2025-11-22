@@ -6,10 +6,9 @@ on:
     branches: ["main"]
 
 jobs:
-
   # linter job
   lint:
-    name: Lint (black + isort + flake8)
+    name: Lint (black, isort, flake8)
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
@@ -28,10 +27,10 @@ jobs:
           pip install black isort flake8 flake8-bugbear
 
       - name: Run Black (check)
-        run: black --check --exclude="(venv|env|migrations)" .
+        run: black --check .
 
       - name: Run isort (check)
-        run: isort --profile black --check-only --skip venv --skip env --skip migrations .
+        run: isort --profile black --check-only .
 
       - name: Run flake8
         run: flake8 --exclude=venv,env,migrations
@@ -60,7 +59,7 @@ jobs:
           pip install pytest pytest-cov
 
       - name: Run tests
-        run: pytest --cov=src --cov-report=xml --cov-report=term-missing
+        run: pytest --cov=src --cov-report=xml --cov-fail-under=30
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4
@@ -105,5 +104,5 @@ jobs:
             echo "Still waiting... ($i/40)"
             sleep 10
           done
-          echo "❌ Service did not pass healthcheck!"
+          echo "Service did not pass healthcheck!"
           exit 1
