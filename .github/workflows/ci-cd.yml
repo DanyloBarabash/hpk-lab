@@ -1,15 +1,16 @@
 name: CI/CD
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
+    types: [closed]
+    branches: ["main"]
 
 jobs:
 
   # linter job
-    lint:
+  lint:
     name: Lint (black + isort + flake8)
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -27,24 +28,19 @@ jobs:
           pip install black isort flake8 flake8-bugbear
 
       - name: Run Black (check)
-        run: |
-          black --check \
-            --exclude="(venv|env|migrations)" .
+        run: black --check --exclude="(venv|env|migrations)" .
 
       - name: Run isort (check)
-        run: |
-          isort --profile black --check-only \
-            --skip venv --skip env --skip migrations .
+        run: isort --profile black --check-only --skip venv --skip env --skip migrations .
 
       - name: Run flake8
-        run: |
-          flake8 \
-            --exclude=venv,env,migrations
+        run: flake8 --exclude=venv,env,migrations
 
 
   # test job
   tests:
     name: Tests + Coverage
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     needs: lint
 
@@ -76,29 +72,32 @@ jobs:
   # deploy job
   deploy:
     name: Deploy to Render
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    needs: tests   # deploy only if tests pass
-    if: github.ref == 'refs/heads/main'
+    needs: tests
 
     steps:
       - name: Trigger Render Deploy Hook
-        run: |
-          curl -X POST "$RENDER_DEPLOY_HOOK"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl -X POST "$RENDER_DEPLOY_HOOK"
 
 
-  # health check job
+   # health check job
   healthcheck:
     name: Health Check on Render
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     needs: deploy
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Wait for Render healthcheck
+        env:
+          HEALTHCHECK_URL: ${{ secrets.RENDER_HEALTHCHECK_URL }}
         run: |
           echo "Waiting for production health..."
           for i in {1..40}; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://hpk-lab.onrender.com/common/healthcheck || true)
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTHCHECK_URL" || true)
             if [ "$STATUS" = "200" ]; then
               echo "Service is healthy!"
               exit 0
@@ -106,5 +105,5 @@ jobs:
             echo "Still waiting... ($i/40)"
             sleep 10
           done
-          echo "Service did not pass healthcheck"
+          echo "❌ Service did not pass healthcheck!"
           exit 1
