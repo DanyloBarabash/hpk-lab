@@ -1,13 +1,12 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
-from .service import StorageService
+from .service import StorageService, get_storage_service
 
 router = APIRouter(prefix="/storage", tags=["Azure Blob Storage"])
-service = StorageService()
 
 
 @router.post("/files")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...), service: StorageService = Depends(get_storage_service)):
     """Upload a file to Azure Blob Storage."""
     try:
         filename = service.upload_file(file)
@@ -17,7 +16,7 @@ async def upload_file(file: UploadFile = File(...)):
 
 
 @router.get("/files")
-async def list_files():
+async def list_files(service: StorageService = Depends(get_storage_service)):
     """Return a list of all files in the container."""
     try:
         return {"files": service.list_files()}
@@ -26,7 +25,7 @@ async def list_files():
 
 
 @router.get("/files/{filename}")
-async def download_file(filename: str):
+async def download_file(filename: str, service: StorageService = Depends(get_storage_service)):
     """Read and return the content of a file."""
     try:
         content = service.download_file(filename)
@@ -38,7 +37,7 @@ async def download_file(filename: str):
 
 
 @router.delete("/files/{filename}")
-async def delete_file(filename: str):
+async def delete_file(filename: str, service: StorageService = Depends(get_storage_service)):
     """Delete a file from Azure Blob Storage."""
     try:
         service.delete_file(filename)
