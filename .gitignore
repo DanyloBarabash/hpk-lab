@@ -9,3 +9,4 @@ __pycache__/
 static/*
 
 .env
+.test.env

@@ -1,5 +1,5 @@
-from pydantic_settings import BaseSettings
 from pydantic import ConfigDict
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -14,6 +14,9 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
     )
+
+    # logging
+    sentry_dsn: str | None = None
 
     # database settings (postgres)
     pg_host: str = "localhost"
@@ -32,10 +35,7 @@ class Settings(BaseSettings):
 
     @property
     def postgres_sync(self):
-        return (
-            f"postgresql://{self.pg_username}:{self.pg_password}@"
-            f"{self.pg_host}:{self.pg_port}/{self.pg_db_name}"
-        )
+        return f"postgresql://{self.pg_username}:{self.pg_password}@" f"{self.pg_host}:{self.pg_port}/{self.pg_db_name}"
 
 
 settings = Settings()

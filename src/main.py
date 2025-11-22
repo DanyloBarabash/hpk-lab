@@ -1,16 +1,18 @@
+import os
 from contextlib import asynccontextmanager
 
-# from src.core.logging.logging_config import setup_logging
-from src.database.base import _init_db_models # noqa
-from fastapi import FastAPI
-from src.core import router as common_routes
-from src.storage import router as storage_router
-from src.external_api import router as external_router
-from src.cat_facts import router as cat_fact_router
-from src.cache import router as cache_router
-from alembic.config import Config
 from alembic import command
-# from src.core.logging.sentry import init_sentry
+from alembic.config import Config
+from fastapi import FastAPI
+
+from src.cache import router as cache_router
+from src.cat_facts import router as cat_fact_router
+from src.core import router as common_routes
+from src.core.logging.logging_config import setup_logging
+from src.core.logging.sentry import init_sentry
+from src.database.base import _init_db_models  # noqa
+from src.external_api import router as external_router
+from src.storage import router as storage_router
 
 
 def run_migrations():
@@ -20,21 +22,22 @@ def run_migrations():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # init_sentry()
-    # setup_logging()
+    init_sentry()
+    setup_logging()
     # # Initialize DB tables on startup
     # await _init_db_models()
     yield
 
 
-run_migrations()
+if os.getenv("TESTING") != "1":
+    run_migrations()
 
 
 app = FastAPI(
     title="Lab FastAPI Project",
     description="Lab project with FastAPI and Swagger UI",
     version="0.1.0",
-    # lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.include_router(common_routes.router)

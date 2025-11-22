@@ -1,4 +1,5 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, File, HTTPException, UploadFile
+
 from .service import StorageService
 
 router = APIRouter(prefix="/storage", tags=["Azure Blob Storage"])

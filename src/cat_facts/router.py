@@ -1,13 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database.base import get_db_session
+from src.cat_facts.models import CatFactCreate, CatFactOut, CatFactStatsOut
 from src.cat_facts.service import CatFactService
-from src.cat_facts.models import (
-    CatFactCreate,
-    CatFactOut,
-    CatFactStatsOut,
-)
+from src.database.base import get_db_session
 
 router = APIRouter(prefix="/facts", tags=["Cat Facts"])
 
@@ -17,10 +13,7 @@ def get_fact_service(session: AsyncSession = Depends(get_db_session)) -> CatFact
 
 
 @router.post("", response_model=CatFactOut)
-async def create_fact(
-    data: CatFactCreate,
-    service: CatFactService = Depends(get_fact_service)
-):
+async def create_fact(data: CatFactCreate, service: CatFactService = Depends(get_fact_service)):
     """
     Create a new local cat fact.
     """
@@ -31,10 +24,7 @@ async def create_fact(
 
 
 @router.get("/random")
-async def get_fact(
-    source: str = "local",
-    service: CatFactService = Depends(get_fact_service)
-):
+async def get_fact(source: str = "local", service: CatFactService = Depends(get_fact_service)):
     """
     Get a random cat fact.
 
@@ -49,10 +39,7 @@ async def get_fact(
 
 
 @router.get("/{fact_id}/stats", response_model=CatFactStatsOut)
-async def get_fact_stats(
-    fact_id: int,
-    service: CatFactService = Depends(get_fact_service)
-):
+async def get_fact_stats(fact_id: int, service: CatFactService = Depends(get_fact_service)):
     """
     Return statistics for a specific local fact.
     """
@@ -63,9 +50,7 @@ async def get_fact_stats(
 
 
 @router.get("", response_model=list[CatFactOut])
-async def get_all_facts(
-    service: CatFactService = Depends(get_fact_service)
-):
+async def get_all_facts(service: CatFactService = Depends(get_fact_service)):
     """
     Return all local cat facts.
     """
@@ -77,10 +62,7 @@ async def get_all_facts(
 
 
 @router.delete("/{fact_id}")
-async def delete_fact(
-    fact_id: int,
-    service: CatFactService = Depends(get_fact_service)
-):
+async def delete_fact(fact_id: int, service: CatFactService = Depends(get_fact_service)):
     """
     Delete a local cat fact and its statistics.
     """

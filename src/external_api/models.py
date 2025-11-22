@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field, HttpUrl, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+
 from src.external_api.config import cat_config as cfg
 
 
