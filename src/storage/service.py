@@ -35,3 +35,7 @@ class StorageService:
             blob_client.delete_blob()
         except ResourceNotFoundError:
             raise FileNotFoundError(f"File '{filename}' not found")
+
+
+def get_storage_service():
+    return StorageService()
