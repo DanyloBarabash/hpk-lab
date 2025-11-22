@@ -58,11 +58,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
-      - name: Set test env vars
-        run: |
-          echo "AZURE_STORAGE_CONNECTION_STRING=fake" >> $GITHUB_ENV
-          echo "AZURE_STORAGE_CONTAINER=test" >> $GITHUB_ENV
-
       - name: Run tests
         run: pytest --cov=src --cov-report=xml --cov-fail-under=30
 
